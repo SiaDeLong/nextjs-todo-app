@@ -15,21 +15,6 @@
 }
 
 @layer components {
-  .tasksList > li:first-of-type article {
-    @apply bg-violet-600 text-slate-100 dark:bg-violet-800;
-  }
-  .tasksList > li:first-of-type article .description {
-    @apply text-violet-300;
-  }
-  .tasksList > li:first-of-type article > div {
-    @apply border-violet-500 dark:border-violet-700;
-  }
-  .listView1 article {
-    @apply h-40;
-  }
-  .listView2 article {
-    @apply h-64;
-  }
   .children-styles {
     @apply text-slate-400;
   }
@@ -56,32 +41,6 @@
   .barProgress > div {
     @apply bg-violet-600 h-full;
   }
-  .itemDirectory > .buttonsDir {
-    @apply xl:opacity-0 transition opacity-100;
-  }
-  .itemDirectory:hover > .buttonsDir {
-    @apply opacity-100;
-  }
-}
-
-/* clears the 'X' from Internet Explorer */
-input[type="search"]::-ms-clear {
-  display: none;
-  width: 0;
-  height: 0;
-}
-input[type="search"]::-ms-reveal {
-  display: none;
-  width: 0;
-  height: 0;
-}
-
-/* clears the 'X' from Chrome */
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration {
-  display: none;
 }
 
 ::-webkit-scrollbar {

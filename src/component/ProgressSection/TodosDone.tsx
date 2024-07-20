@@ -2,6 +2,7 @@ import React from "react";
 import useTodayTodos from "~/hook/useTodayTodos";
 import useCompletedTodos from "~/hook/useCompletedTodos";
 import { useTodos } from "~/context/TodoContext";
+import { CheckIcon } from "@heroicons/react/16/solid";
 
 const TodosDone: React.FC = () => {
   const todaysTodos = useTodayTodos();
@@ -21,9 +22,7 @@ const TodosDone: React.FC = () => {
   const percentageAllTodos = (allTodosDone.length * 100) / todos.length;
 
   const todaysTodosToShow = todaysTodos.slice(0, 3);
-
-  //const showMore = todaysTodos.length > todaysTodosToShow.length;
-
+  
   return (
     <>
       {todaysTodos.length !== 0 && (
@@ -59,8 +58,10 @@ const TodosDone: React.FC = () => {
           <span className="mb-2 block">Today&apos;s todos</span>
           <ul>
             {todaysTodosToShow.map((todo) => (
-              <li key={todo.id} className="py-2 pl-6 text-slate-200 list-item">
-                <span>{todo.title}</span>
+              <li key={todo.id} className="py-2 pl-6 dark:text-slate-200 list-item">
+                <span className="flex">
+                  {todo.completed ? <CheckIcon className="w-6 h-6" /> : null} {todo.title}
+                </span>
               </li>
             ))}
           </ul>

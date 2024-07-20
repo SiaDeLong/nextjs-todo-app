@@ -1,27 +1,20 @@
 import { TrashIcon } from "@heroicons/react/16/solid";
-import React, { useState } from "react";
-import { useTodos } from "~/context/TodoContext";
-import ConfirmDeleteModal from "~/modal/ConfirmDeleteModal";
+import React from "react";
+import { useModal } from "~/context/ModalContext";
 
-const BtnDeleteTask: React.FC<{ todoId: string }> = ({ todoId }) => {
-  const [showModal, setIsModalShown] = useState<boolean>(false);
-  const { removeTodo } = useTodos();
+const BtnDeleteTodo: React.FC<{ todoId: string }> = ({ todoId }) => {
+  const { setTodoIdToDelete, openConfirmDeleteModal } = useModal();
+  
 
-  const confirmDelete = () => {
-    removeTodo(todoId);
+  const openConfirmDelete = () => {
+    setTodoIdToDelete(todoId);
+    openConfirmDeleteModal();
   }
 
   return (
     <>
-      {showModal && (
-        <ConfirmDeleteModal
-          onClose={() => setIsModalShown(false)}
-          text="This todo will be deleted permanently."
-          onConfirm={confirmDelete}
-        />
-      )}
       <button
-        onClick={() => setIsModalShown(true)}
+        onClick={openConfirmDelete}
         title="delete todo"
         className="ml-2 transition hover:text-slate-700 dark:hover:text-slate-200"
       >
@@ -31,4 +24,4 @@ const BtnDeleteTask: React.FC<{ todoId: string }> = ({ todoId }) => {
   );
 };
 
-export default React.memo(BtnDeleteTask);
+export default React.memo(BtnDeleteTodo);

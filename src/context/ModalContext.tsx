@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
-import { Todo } from '~/Interface/Todo';
+import type { Todo } from '~/Interface/Todo';
 
 interface ModalContextType {
   isTodoModalOpen: boolean;
@@ -11,6 +11,8 @@ interface ModalContextType {
   isConfirmDeleteModalOpen: boolean;
   openConfirmDeleteModal: () => void;
   closeConfirmDeleteModal: () => void;
+  todoIdToDelete: string;
+  setTodoIdToDelete: (id: string) => void;
   nameForm: string;
   setTitle: (nameForm: string) => void;
   todoToEdit: Todo;
@@ -31,9 +33,13 @@ const defaultContextValue: ModalContextType = {
   }, 
   closeConfirmDeleteModal: () => {
     // Implementation pending
-  }, 
+  },
+  todoIdToDelete: "",
+  setTodoIdToDelete: () => {
+    // Implementation pending
+  },
   nameForm: "Add a todo",
-  setTitle: (nameForm: string) => {
+  setTitle: () => {
     // Implementation pending
   }, 
   todoToEdit: {
@@ -45,7 +51,7 @@ const defaultContextValue: ModalContextType = {
     id: '',
     visibility: true
   },
-  setTodo: (todo: Todo) => {
+  setTodo: () => {
     // Implementation pending
   }, 
 };
@@ -55,6 +61,7 @@ const ModalContext = createContext<ModalContextType>(defaultContextValue);
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [isTodoModalOpen, setIsTodoModalOpen] = useState<boolean>(false);
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState<boolean>(false);
+  const [todoIdToDelete, setTodoId] = useState<string>("");
   const [nameForm, setNameForm] = useState<string>("Add a todo");
   const [todoToEdit, setTodoToEdit] = useState<Todo>({
     title: '',
@@ -68,6 +75,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
   const setTitle = (nameForm: string) => setNameForm(nameForm);
   const setTodo = (todo: Todo) => setTodoToEdit(todo);
+  const setTodoIdToDelete = (id: string) => setTodoId(id);
 
   const openTodoModal = () => setIsTodoModalOpen(true);
   const closeTodoModal = () => setIsTodoModalOpen(false);
@@ -76,7 +84,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const closeConfirmDeleteModal = () => setIsConfirmDeleteModalOpen(false);
 
   return (
-    <ModalContext.Provider value={{ isTodoModalOpen, openTodoModal, closeTodoModal, isConfirmDeleteModalOpen, openConfirmDeleteModal, closeConfirmDeleteModal, nameForm, setTitle, todoToEdit, setTodo}}>
+    <ModalContext.Provider value={{ isTodoModalOpen, openTodoModal, closeTodoModal, isConfirmDeleteModalOpen, openConfirmDeleteModal, closeConfirmDeleteModal, todoIdToDelete, setTodoIdToDelete, nameForm, setTitle, todoToEdit, setTodo}}>
       {children}
     </ModalContext.Provider>
   );

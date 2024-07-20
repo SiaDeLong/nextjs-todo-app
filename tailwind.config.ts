@@ -1,12 +1,17 @@
 import { type Config } from "tailwindcss";
-import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
+  darkMode: 'class',
   content: ["./src/**/*.tsx"],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ["var(--font-geist-sans)", ...fontFamily.sans],
+      colors: {
+        slate: {
+          800: "#141E33",
+        },
+      },
+      screens: {
+        "2xl": "1736px",
       },
     },
   },

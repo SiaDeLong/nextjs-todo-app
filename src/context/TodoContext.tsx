@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
-import { Todo } from '~/Interface/Todo';
+import type { Todo } from '~/Interface/Todo';
 
 
 interface TodoContextType {
@@ -14,45 +14,72 @@ interface TodoContextType {
   enableAllVisibility: (matachedTodos?: Todo[]) => void;
 }
 
+const date: Date = new Date();
+const year: number = date.getFullYear();
+const month: number = date.getMonth() + 1;
+const day: number = date.getDate();
+
+const todayDate = `${year}-${month.toString().padStart(2, "0")}-${day
+  .toString()
+  .padStart(2, "0")}`;
+
 const defaultTodos: Todo[] = [
-    {
-      title: "Learn Nextjs",
-      important: false,
-      description: "This is the description for this todo",
-      date: "2024-07-20",
-      completed: true,
-      id: "t1",
-      visibility: true,
-    },
-    {
-      title: "Create a Todo App",
-      important: true,
-      description: "This is the description for this todo",
-      date: "2023-05-15",
-      completed: true,
-      id: "t2",
-      visibility: true,
-    },
-    {
-      title: "Publish it to Vercel",
-      important: false,
-      description: "This is the description for this todo",
-      date: "2023-08-21",
-      completed: false,
-      id: "t3",
-      visibility: true,
-    }
-  ];
+  {
+    title: "Learn Nextjs",
+    important: true,
+    description: "Explore the official Nextjs website and their documentation. Looks for beginner tutorials on media platforms such as Youtube.",
+    date: todayDate,
+    completed: true,
+    id: "t1",
+    visibility: true,
+  },
+  {
+    title: "Create a Nextjs App",
+    important: false,
+    description: "Learn the command to create a new Nextjs App and try to start the development environment. Goal is to see the landing page of Nextjs.",
+    date: todayDate,
+    completed: true,
+    id: "t2",
+    visibility: true,
+  },
+  {
+    title: "Import Tailwindcss and Heroicons beforehand",
+    important: false,
+    description: "Find the way to properly import and configure the package to Nextjs App and try to apply the style to test it.",
+    date: todayDate,
+    completed: false,
+    id: "t3",
+    visibility: true,
+  },
+  {
+    title: "Demonstration of Todo",
+    important: true,
+    description: "This todo is to demonstrate that is not today date.",
+    date: "2100-10-5",
+    completed: false,
+    id: "t4",
+    visibility: true,
+  },
+  {
+    title: "Demonstration of Todo 2",
+    important: false,
+    description: "This todo is to demonstrate that is not today date.",
+    date: "2100-10-5",
+    completed: false,
+    id: "t5",
+    visibility: true,
+  }
+];
 
 const defaultContextValue: TodoContextType = {
   todos: defaultTodos,
-  initTodo: () => { 
+  initTodo: () => {
     // Implementation pending
   },
-  createTodo: () => { 
+  createTodo: () => {
     // Implementation pending
   },
-  editTodo: () => { 
+  editTodo: () => {
     // Implementation pending
   },
   removeTodo: () => {
@@ -72,58 +99,70 @@ const defaultContextValue: TodoContextType = {
 const TodoContext = createContext<TodoContextType>(defaultContextValue);
 
 export const TodoProvider = ({ children }: { children: ReactNode }) => {
-    const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>([]);
 
-    const initTodo = (): void => {
-        setTodos(defaultTodos);
-    }
+  const toMilliseconds = (date: string) => Date.parse(date);
+  const sortTodos = (todos: Todo[]) => {
+    return todos.slice().sort((todo1, todo2) => {
+      const date1 = toMilliseconds(todo1.date);
+      const date2 = toMilliseconds(todo2.date);
 
-    const createTodo = (newTodo: Todo): void => {
-        setTodos(prevTodos => [...prevTodos, newTodo]);
-    }
+      if (date1 < date2) {
+        return -1;
+      }
+      if (date1 > date2) {
+        return 1;
+      }
+      return 0;
+    });
+  };
 
-    const editTodo = (editedTodo: Todo): void => {
-        setTodos(prevTodos => 
-            prevTodos.map(todo =>
-                todo.id === editedTodo.id ?  editedTodo  : todo
-            )
-        );
-    }
+  const initTodo = (): void => {
+    setTodos(defaultTodos);
+  }
 
-    const removeTodo = (id: string) => {
-        setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
-    };
+  const createTodo = (newTodo: Todo): void => {
+    setTodos(prevTodos => sortTodos([...prevTodos, newTodo]));
+  };
 
-    const toggleTodo = (id: string) => {
-        setTodos(prevTodos => 
-            prevTodos.map(todo =>
-                todo.id === id ? { ...todo, completed: !todo.completed } : todo
-            )
-        );
-    };
+  const editTodo = (editedTodo: Todo): void => {
+    setTodos(prevTodos => sortTodos(prevTodos.map(todo => (todo.id === editedTodo.id ? editedTodo : todo))));
+  };
+  
+  const removeTodo = (id: string) => {
+    setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
+  };
 
-    const toggleImportant = (id: string) => {
-        setTodos(prevTodos => 
-            prevTodos.map(todo =>
-                todo.id === id ? { ...todo, important: !todo.important } : todo
-            )
-        );
-    };
-
-    const enableAllVisibility = (matachedTodos?: Todo[]) => {
-      setTodos(todos.map(todo => matachedTodos? 
-        (matachedTodos.includes(todo)? 
-          { ...todo, visibility: true } : 
-          { ...todo, visibility: false }) 
-        : 
-        ({ ...todo, visibility: true })));
-    };
-
-    return (
-        <TodoContext.Provider value={{ todos, initTodo, createTodo, editTodo, removeTodo, toggleTodo, toggleImportant, enableAllVisibility }}>
-        {children}
-        </TodoContext.Provider>
+  const toggleTodo = (id: string) => {
+    setTodos(prevTodos =>
+      prevTodos.map(todo =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
     );
+  };
+
+  const toggleImportant = (id: string) => {
+    setTodos(prevTodos =>
+      prevTodos.map(todo =>
+        todo.id === id ? { ...todo, important: !todo.important } : todo
+      )
+    );
+  };
+
+  const enableAllVisibility = (matachedTodos?: Todo[]) => {
+    setTodos(todos.map(todo => matachedTodos ?
+      (matachedTodos.includes(todo) ?
+        { ...todo, visibility: true } :
+        { ...todo, visibility: false })
+      :
+      ({ ...todo, visibility: true })));
+  };
+
+  return (
+    <TodoContext.Provider value={{ todos, initTodo, createTodo, editTodo, removeTodo, toggleTodo, toggleImportant, enableAllVisibility }}>
+      {children}
+    </TodoContext.Provider>
+  );
 };
 
 export const useTodos = () => useContext(TodoContext);

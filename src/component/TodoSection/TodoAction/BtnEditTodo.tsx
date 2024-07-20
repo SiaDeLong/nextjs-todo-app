@@ -1,9 +1,7 @@
 import { PencilIcon } from "@heroicons/react/16/solid";
-import React, { useState } from "react";
+import React from "react";
 import { useModal } from "~/context/ModalContext";
-import { useTodos } from "~/context/TodoContext";
-import { Todo } from "~/Interface/Todo";
-import TodoModal from "~/modal/TodoModal";
+import type { Todo } from '~/Interface/Todo';
 
 const BtnEditTodo: React.FC<{ todo: Todo }> = ({ todo }) => {
   const { openTodoModal, setTitle, setTodo } = useModal();
